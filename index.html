@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starlog — Curated Intelligence on AI Agents & Offensive Security Tools</title>
+<meta name="description" content="Deep-dive write-ups on trending GitHub repos in AI agents, offensive security, and developer tools. Interactive knowledge graphs, HD audio narration, codebase intelligence. Free.">
+<meta property="og:title" content="Starlog — AI Agent & Offsec Intel">
+<meta property="og:description" content="Curated deep-dives on trending GitHub repos. Interactive knowledge graphs, HD audio, codebase intelligence.">
+<meta property="og:url" content="https://starlog.is">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://starlog.is">
+<style>
+  :root {
+    --accent: #29BECC;
+    --accent-dim: rgba(41, 190, 204, 0.15);
+    --bg: #060a14;
+    --surface: #0a0e1a;
+    --border: #1a3a4a;
+    --text: #c8d8e8;
+    --muted: #6a8a9a;
+    --red: #FF6B6B;
+    --yellow: #FFEAA7;
+    --green: #4ECDC4;
+    --purple: #BB8FCE;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* Nav */
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .nav-brand {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+  .nav-links { display: flex; gap: 1.5rem; font-size: 0.8rem; }
+  .nav-links a { color: var(--muted); }
+  .nav-links a:hover { color: var(--accent); text-decoration: none; }
+  .btn {
+    display: inline-block;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    padding: 0.4rem 1rem;
+    font-family: inherit;
+    font-size: 0.8rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+    cursor: pointer;
+    background: transparent;
+  }
+  .btn:hover { background: var(--accent-dim); text-decoration: none; }
+  .btn-solid {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+    font-weight: bold;
+  }
+  .btn-solid:hover { opacity: 0.9; }
+
+  /* Hero */
+  .hero {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+  }
+  .hero-prefix {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    color: var(--accent);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  .hero h1 span { color: var(--text); }
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 700px;
+    margin: 0 auto 2.5rem;
+    line-height: 1.7;
+  }
+  .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 1.8rem; color: var(--accent); font-weight: bold; }
+  .stat-label { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* Features */
+  .features {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  .features-header {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+  .features-header h2 {
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 0.5rem;
+  }
+  .features-header p {
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .feature-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2rem;
+    background: var(--surface);
+    transition: border-color 0.2s;
+  }
+  .feature-card:hover { border-color: var(--accent); }
+  .feature-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .feature-card h3 {
+    font-size: 0.9rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .feature-card p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .feature-tag {
+    display: inline-block;
+    font-size: 0.6rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    margin-top: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .tag-free { background: rgba(78, 205, 196, 0.15); color: var(--green); border: 1px solid rgba(78, 205, 196, 0.3); }
+  .tag-premium { background: rgba(187, 143, 206, 0.15); color: var(--purple); border: 1px solid rgba(187, 143, 206, 0.3); }
+  .tag-new { background: rgba(255, 107, 107, 0.15); color: var(--red); border: 1px solid rgba(255, 107, 107, 0.3); }
+
+  /* Showcase */
+  .showcase {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .showcase h2 {
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .showcase-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+  .showcase-item {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.25rem;
+    background: var(--surface);
+    transition: border-color 0.2s;
+  }
+  .showcase-item:hover { border-color: var(--accent); }
+  .showcase-item h4 {
+    font-size: 0.8rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+  .showcase-meta {
+    font-size: 0.65rem;
+    color: var(--muted);
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .showcase-item p {
+    font-size: 0.7rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* How it works */
+  .how {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .how h2 {
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+  }
+  .step {
+    text-align: center;
+  }
+  .step-num {
+    font-size: 2rem;
+    color: var(--accent);
+    opacity: 0.3;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  .step h3 {
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+  }
+  .step p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    padding: 5rem 2rem;
+    border-top: 1px solid var(--border);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .cta h2 {
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .cta p {
+    color: var(--muted);
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--muted);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  footer a { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    .hero { padding: 3rem 1.5rem 2rem; }
+    .hero-stats { gap: 1.5rem; }
+    .stat-num { font-size: 1.3rem; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">[ STARLOG ]</div>
+  <div class="nav-links">
+    <a href="https://starlog.is">Articles</a>
+    <a href="https://starlog.is/search">Search</a>
+    <a href="https://starlog.is/rss.xml">RSS</a>
+    <a href="https://starlog.is/premium">Premium</a>
+  </div>
+  <a href="https://starlog.is" class="btn btn-solid">Visit Starlog</a>
+</nav>
+
+<section class="hero">
+  <p class="hero-prefix">// Curated Intelligence</p>
+  <h1>Deep-dives on <span>AI agents</span> & <span>offensive security</span> tools</h1>
+  <p class="hero-sub">
+    Every trending GitHub repo gets a curated write-up, interactive knowledge graph,
+    HD audio narration, and architectural intelligence. No noise. No fluff. Just signal.
+  </p>
+  <div class="hero-buttons">
+    <a href="https://starlog.is" class="btn btn-solid">Browse Articles</a>
+    <a href="https://starlog.is/search" class="btn">Search Repos</a>
+    <a href="https://github.com/basicScandal/starlog" class="btn">GitHub</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">166+</div>
+      <div class="stat-label">Articles</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">66</div>
+      <div class="stat-label">Knowledge Graphs</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">159</div>
+      <div class="stat-label">HD Audio Narrations</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">8</div>
+      <div class="stat-label">Categories</div>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="features-header">
+    <h2>// FEATURES</h2>
+    <p>Every article comes with layers of intelligence you won't find anywhere else</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">&#9671;</div>
+      <h3>Interactive Knowledge Graphs</h3>
+      <p>
+        Powered by GitNexus, every trending repo gets an interactive code dependency graph.
+        See community clusters, call relationships, and architectural patterns at a glance.
+        Click to explore, double-click to drill into symbols. Full-screen mode included.
+      </p>
+      <span class="feature-tag tag-new">NEW</span>
+      <span class="feature-tag tag-free">FREE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9834;</div>
+      <h3>HD Audio Narration</h3>
+      <p>
+        Every article is narrated by Lily (Kokoro TTS) in natural, clear speech.
+        Listen while you commute, exercise, or code. Adjustable speed, seekable playback,
+        with automatic fallback to browser speech synthesis.
+      </p>
+      <span class="feature-tag tag-free">FREE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9881;</div>
+      <h3>Codebase Intelligence</h3>
+      <p>
+        Architecture overviews, Mermaid diagrams, and repository health signals for every repo.
+        Premium subscribers get component breakdowns, entry point analysis, core abstractions,
+        dependency graphs, and quality heuristics.
+      </p>
+      <span class="feature-tag tag-free">FREE + </span>
+      <span class="feature-tag tag-premium">PREMIUM</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9878;</div>
+      <h3>Curated Deep-Dives</h3>
+      <p>
+        Not summaries. Deep technical write-ups with Hook, Context, Technical Insight,
+        Gotcha, and Verdict sections. Every article explains what the repo does, how it works
+        under the hood, where it falls short, and when to use it.
+      </p>
+      <span class="feature-tag tag-free">FREE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#8644;</div>
+      <h3>Repo Comparison</h3>
+      <p>
+        Similar repos surfaced automatically via pairwise analysis. Compare any two repos
+        side-by-side to understand trade-offs, architecture differences, and which one
+        fits your use case.
+      </p>
+      <span class="feature-tag tag-free">FREE</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">&#9889;</div>
+      <h3>Auto-Publish Pipeline</h3>
+      <p>
+        Star a repo on GitHub, and Starlog automatically generates a deep-dive article
+        within 15 minutes. Analysis by Claude, diagrams auto-generated, audio narrated,
+        deployed to Cloudflare Pages. Zero manual intervention.
+      </p>
+      <span class="feature-tag tag-free">AUTOMATED</span>
+    </div>
+  </div>
+</section>
+
+<section class="showcase">
+  <h2>// FEATURED ARTICLES</h2>
+  <div class="showcase-grid">
+    <a href="https://starlog.is/articles/ai-dev-tools/garrytan-gstack/" class="showcase-item">
+      <h4>gstack: How Garry Tan Turned Claude Into a Six-Person Engineering Team</h4>
+      <div class="showcase-meta"><span>5.3k stars</span><span>TypeScript</span><span>AI Dev Tools</span></div>
+      <p>A skill system that transforms Claude Code into six distinct personas with browser automation.</p>
+    </a>
+    <a href="https://starlog.is/articles/cybersecurity/gitleaks-gitleaks/" class="showcase-item">
+      <h4>Gitleaks: Regex-Based Secret Detection for DevSecOps Pipelines</h4>
+      <div class="showcase-meta"><span>25k stars</span><span>Go</span><span>Cybersecurity</span></div>
+      <p>How regex-based secret detection became the gold standard for catching leaked credentials.</p>
+    </a>
+    <a href="https://starlog.is/articles/ai-dev-tools/thedotmack-claude-mem/" class="showcase-item">
+      <h4>Claude-Mem: Building Episodic Memory for AI Coding Sessions</h4>
+      <div class="showcase-meta"><span>26.4k stars</span><span>TypeScript</span><span>AI Dev Tools</span></div>
+      <p>Turning Claude Code into an AI with long-term memory across development sessions.</p>
+    </a>
+    <a href="https://starlog.is/articles/data-knowledge/surrealdb-surrealdb/" class="showcase-item">
+      <h4>SurrealDB: The Database That Wants to Replace Your Entire Backend Stack</h4>
+      <div class="showcase-meta"><span>31.3k stars</span><span>Rust</span><span>Data & Knowledge</span></div>
+      <p>Multi-model database combining SQL, graph, document, and time-series in one engine.</p>
+    </a>
+    <a href="https://starlog.is/articles/cybersecurity/basicscandal-arbiter/" class="showcase-item">
+      <h4>Building a Prompt-Injection-Proof AI Judge with Dual-LLM Privilege Separation</h4>
+      <div class="showcase-meta"><span>Cybersecurity</span><span>Python</span><span>AI Security</span></div>
+      <p>How architectural privilege separation defeats prompt injection in live AI judging systems.</p>
+    </a>
+    <a href="https://starlog.is/articles/data-knowledge/abhigyanpatwari-gitnexus/" class="showcase-item">
+      <h4>GitNexus: Building Knowledge Graphs for AI Code Agents Without Servers</h4>
+      <div class="showcase-meta"><span>15.1k stars</span><span>TypeScript</span><span>Data & Knowledge</span></div>
+      <p>Client-side code knowledge graphs that make AI assistants architecturally aware.</p>
+    </a>
+  </div>
+</section>
+
+<section class="how">
+  <h2>// HOW IT WORKS</h2>
+  <div class="how-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Star a Repo</h3>
+      <p>Star any GitHub repo. The autopublish worker detects it within 15 minutes via cron polling.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>AI Analysis</h3>
+      <p>Claude analyzes the README and codebase, generating a structured deep-dive with technical insights, gotchas, and verdict.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Knowledge Graph</h3>
+      <p>GitNexus indexes the repo, extracting symbols, call graphs, and community clusters into an interactive visualization.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Audio + Deploy</h3>
+      <p>Kokoro TTS narrates the article in HD. Everything deploys to Cloudflare Pages automatically. Zero manual steps.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Start exploring</h2>
+  <p>166+ curated write-ups on the most interesting AI agent and security repos on GitHub. Free.</p>
+  <div class="hero-buttons">
+    <a href="https://starlog.is" class="btn btn-solid">Browse starlog.is</a>
+    <a href="https://starlog.is/premium" class="btn">Premium $9/mo</a>
+  </div>
+</section>
+
+<footer>
+  <p>
+    > Curated by <a href="https://www.linkedin.com/in/robragan/">Rob Ragan</a> // Offsec & AI agent intel. No noise.
+    <br>
+    <a href="https://starlog.is">starlog.is</a> &middot;
+    <a href="https://starlog.is/rss.xml">RSS</a> &middot;
+    <a href="mailto:partner@starlog.is">partner@starlog.is</a>
+  </p>
+</footer>
+
+</body>
+</html>
