@@ -263,6 +263,93 @@
     line-height: 1.6;
   }
 
+  /* Architecture / How it's built */
+  .arch {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    border-top: 1px solid var(--border);
+  }
+  .arch h2 {
+    font-size: 0.85rem;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  .arch-intro {
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    margin-bottom: 3rem;
+  }
+  .arch-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .arch-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    background: var(--surface);
+  }
+  .arch-card h3 {
+    font-size: 0.8rem;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    letter-spacing: 0.05em;
+  }
+  .arch-card p {
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 0.5rem;
+  }
+  .arch-card code {
+    font-size: 0.7rem;
+    background: rgba(41, 190, 204, 0.08);
+    color: var(--accent);
+    padding: 0.1rem 0.4rem;
+    border-radius: 2px;
+  }
+  .arch-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0 0;
+  }
+  .arch-card li {
+    font-size: 0.75rem;
+    color: var(--muted);
+    padding: 0.2rem 0;
+  }
+  .arch-card li::before {
+    content: ">";
+    color: var(--accent);
+    margin-right: 0.5rem;
+    opacity: 0.5;
+  }
+  .arch-full {
+    grid-column: 1 / -1;
+  }
+  .arch-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+  .arch-badge {
+    font-size: 0.65rem;
+    padding: 0.2rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    color: var(--text);
+    background: var(--bg);
+  }
+  @media (max-width: 640px) {
+    .arch-grid { grid-template-columns: 1fr; }
+  }
+
   /* CTA */
   .cta {
     text-align: center;
@@ -346,6 +433,32 @@
   </div>
 </section>
 
+<section class="how">
+  <h2>// HOW IT WORKS</h2>
+  <div class="how-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <h3>Star a Repo</h3>
+      <p>Star any GitHub repo. The autopublish worker detects it within 15 minutes via cron polling.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <h3>AI Analysis</h3>
+      <p>Claude analyzes the README and codebase, generating a structured deep-dive with technical insights, gotchas, and verdict.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <h3>Knowledge Graph</h3>
+      <p>GitNexus indexes the repo, extracting symbols, call graphs, and community clusters into an interactive visualization.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <h3>Audio + Deploy</h3>
+      <p>Kokoro TTS narrates the article in HD. Everything deploys to Cloudflare Pages automatically. Zero manual steps.</p>
+    </div>
+  </div>
+</section>
+
 <section class="features">
   <div class="features-header">
     <h2>// FEATURES</h2>
@@ -416,6 +529,88 @@
   </div>
 </section>
 
+<section class="arch">
+  <h2>// HOW IT'S BUILT</h2>
+  <p class="arch-intro">Starlog runs on ~$10/month. Here's the full stack.</p>
+  <div class="arch-grid">
+    <div class="arch-card">
+      <h3>Autopublish Worker</h3>
+      <p>A Cloudflare Worker on a 15-minute cron that polls your GitHub stars, fetches READMEs, and orchestrates the entire pipeline. Each new star triggers:</p>
+      <ul>
+        <li>README fetch via GitHub API</li>
+        <li>Claude Sonnet structured analysis (2 API calls)</li>
+        <li>Mermaid architecture diagram generation</li>
+        <li>Quality scoring via local heuristics</li>
+        <li>Git commit via GitHub Contents API</li>
+        <li>Cloudflare Pages auto-deploy</li>
+      </ul>
+      <p>Max 3 repos per cron run to stay within Worker CPU limits. Remaining repos picked up on the next tick.</p>
+    </div>
+    <div class="arch-card">
+      <h3>Knowledge Graph Pipeline</h3>
+      <p>Runs locally via <code>scripts/graph-index.ts</code>. For each qualifying repo (1,000+ stars):</p>
+      <ul>
+        <li>Shallow clone from GitHub</li>
+        <li>GitNexus CLI analyzes with Tree-sitter AST parsing</li>
+        <li>LadybugDB graph database stores symbols + edges</li>
+        <li>Cypher queries extract functions, classes, call/import edges</li>
+        <li>Leiden community detection groups related symbols</li>
+        <li>Compact JSON exported (50-750KB per repo)</li>
+        <li>Uploaded to Cloudflare R2, served via API endpoint</li>
+      </ul>
+      <p>Client-side rendering with cytoscape.js. Collapsed community view for large graphs, click-to-expand into symbols.</p>
+    </div>
+    <div class="arch-card">
+      <h3>Audio Generation</h3>
+      <p>HD narration via Replicate's Kokoro-82M model with the <code>bf_lily</code> voice at 1.0x speed.</p>
+      <ul>
+        <li>Markdown cleaned for speech (strip code blocks, URLs, HTML)</li>
+        <li>Repo names normalized ("owner slash repo")</li>
+        <li>Section labels injected for natural reading flow</li>
+        <li>MP3 uploaded to R2, served via <code>/api/audio/[slug]</code></li>
+        <li>Cost: ~$0.0006 per article</li>
+      </ul>
+      <p>Browser falls back to Web Speech API for repos below the generation threshold.</p>
+    </div>
+    <div class="arch-card">
+      <h3>Codebase Intelligence Worker</h3>
+      <p>Separate Cloudflare Worker on a 5-minute cron. Processes repos from a D1 queue:</p>
+      <ul>
+        <li>Two-stage quality gates (reject forks, stale repos, tiny codebases)</li>
+        <li>GitHub tree + blob API for source file download</li>
+        <li>Claude Sonnet structured output for architecture analysis</li>
+        <li>Mermaid diagram validation with Haiku fix loop (up to 3 retries)</li>
+        <li>Static import analysis via <code>es-module-lexer</code></li>
+        <li>Health signals from 4 parallel GitHub API endpoints</li>
+        <li>Results stored in D1 + KV cache (24h TTL)</li>
+      </ul>
+    </div>
+    <div class="arch-card arch-full">
+      <h3>Infrastructure Stack</h3>
+      <p>Everything runs on Cloudflare's free tier except API calls to Anthropic and Replicate.</p>
+      <div class="arch-stack">
+        <span class="arch-badge">Astro 5</span>
+        <span class="arch-badge">Cloudflare Pages</span>
+        <span class="arch-badge">Cloudflare D1 (SQLite)</span>
+        <span class="arch-badge">Cloudflare KV</span>
+        <span class="arch-badge">Cloudflare R2</span>
+        <span class="arch-badge">Cloudflare Workers (4x cron)</span>
+        <span class="arch-badge">Claude Sonnet</span>
+        <span class="arch-badge">Claude Haiku</span>
+        <span class="arch-badge">Replicate Kokoro-82M</span>
+        <span class="arch-badge">GitNexus + LadybugDB</span>
+        <span class="arch-badge">cytoscape.js</span>
+        <span class="arch-badge">Pagefind</span>
+        <span class="arch-badge">Mermaid</span>
+        <span class="arch-badge">TypeScript</span>
+        <span class="arch-badge">Bun</span>
+        <span class="arch-badge">GitHub Actions CI/CD</span>
+      </div>
+      <p style="margin-top: 1rem;">Total monthly cost: <strong style="color: var(--accent);">~$10-15</strong> (almost entirely Anthropic API). Zero egress fees. Zero server management. The entire site rebuilds and deploys in under 2 minutes.</p>
+    </div>
+  </div>
+</section>
+
 <section class="showcase">
   <h2>// FEATURED ARTICLES</h2>
   <div class="showcase-grid">
@@ -449,32 +644,6 @@
       <div class="showcase-meta"><span>15.1k stars</span><span>TypeScript</span><span>Data & Knowledge</span></div>
       <p>Client-side code knowledge graphs that make AI assistants architecturally aware.</p>
     </a>
-  </div>
-</section>
-
-<section class="how">
-  <h2>// HOW IT WORKS</h2>
-  <div class="how-steps">
-    <div class="step">
-      <div class="step-num">01</div>
-      <h3>Star a Repo</h3>
-      <p>Star any GitHub repo. The autopublish worker detects it within 15 minutes via cron polling.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <h3>AI Analysis</h3>
-      <p>Claude analyzes the README and codebase, generating a structured deep-dive with technical insights, gotchas, and verdict.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <h3>Knowledge Graph</h3>
-      <p>GitNexus indexes the repo, extracting symbols, call graphs, and community clusters into an interactive visualization.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">04</div>
-      <h3>Audio + Deploy</h3>
-      <p>Kokoro TTS narrates the article in HD. Everything deploys to Cloudflare Pages automatically. Zero manual steps.</p>
-    </div>
   </div>
 </section>
 
